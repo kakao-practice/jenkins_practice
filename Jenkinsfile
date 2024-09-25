@@ -5,6 +5,7 @@ pipeline {
         ECR_REPO = '533267394091.dkr.ecr.ap-northeast-2.amazonaws.com/moing/backend'
         ECR_CREDENTIALS_ID = 'ecr:ap-northeast-2:ecr_credentials_id'
         SSH_CREDENTIALS_ID = 'EC2_ssh_key'
+        EC2_INSTANCE_IP = '43.201.149.62'
     }
 
     stages {
@@ -39,8 +40,8 @@ pipeline {
                     script {
                         // SSH 자격 증명을 사용하여 EC2에 접속하고, Docker 명령어를 실행
                         sshagent([SSH_CREDENTIALS_ID]) {
-                            sh '''
-                            ssh -o StrictHostKeyChecking=no ec2-user@${EC2_INSTANCE_IP} << 'EOF'
+                            sh """
+                            ssh -o StrictHostKeyChecking=no ec2-user@${EC2_INSTANCE_IP} '
                             aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin ${ECR_REPO}
                             docker pull ${ECR_REPO}:latest
                             docker stop node_server || true
@@ -48,8 +49,8 @@ pipeline {
                             docker run -d --name node_server -p 3000:3000 ${ECR_REPO}:latest
                             docker system prune -f
                             docker image prune -f
-                            EOF
-                            '''
+                            '
+                            """
                         }
                     }
                 }
