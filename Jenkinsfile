@@ -37,19 +37,19 @@ pipeline {
             steps {
                 withCredentials([string(credentialsId: 'SSH_node_key', variable: 'EC2_INSTANCE_IP')]) {
                     script {
-                        // SSH를 통해 EC2에 연결하고, ECR 이미지를 가져와 실행
+                        // SSH 자격 증명을 사용하여 EC2에 접속하고, Docker 명령어를 실행
                         sshagent([SSH_CREDENTIALS_ID]) {
-                            sh """
-                            ssh -o StrictHostKeyChecking=no ec2-user@${EC2_INSTANCE_IP} "
-                            aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin ${ECR_REPO};
-                            docker pull ${ECR_REPO}:latest;
-                            docker stop node_server || true;
-                            docker rm node_server || true;
-                            docker run -d --name node_server -p 3000:3000 ${ECR_REPO}:latest;
-                            docker system prune -f;
+                            sh '''
+                            ssh -o StrictHostKeyChecking=no ec2-user@${EC2_INSTANCE_IP} << 'EOF'
+                            aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin ${ECR_REPO}
+                            docker pull ${ECR_REPO}:latest
+                            docker stop node_server || true
+                            docker rm node_server || true
+                            docker run -d --name node_server -p 3000:3000 ${ECR_REPO}:latest
+                            docker system prune -f
                             docker image prune -f
-                            "
-                            """
+                            EOF
+                            '''
                         }
                     }
                 }
