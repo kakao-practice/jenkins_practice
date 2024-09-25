@@ -2,8 +2,8 @@ pipeline {
     agent any
 
     environment {
-        ECR_REPO = '211125697339.dkr.ecr.ap-northeast-2.amazonaws.com/back_node'
-        ECR_CREDENTIALS_ID = 'ecr:ap-northeast-2:moreburgerIAM'
+        ECR_REPO = '533267394091.dkr.ecr.ap-northeast-2.amazonaws.com/moing/backend'
+        ECR_CREDENTIALS_ID = 'ecr:ap-northeast-2:ecr_credentials_id'
         SSH_CREDENTIALS_ID = 'EC2_ssh_key'
     }
 
@@ -11,7 +11,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 // Git 소스 코드를 체크아웃하는 단계
-                git branch: 'main', url: "https://github.com/여기바꾸기", credentialsId: 'github_for_jenkins'
+                git branch: 'main', url: "https://github.com/onikesum/moing-backend", credentialsId: 'picky-github-app'
             }
         }
 
@@ -40,7 +40,7 @@ pipeline {
                         // SSH를 통해 EC2에 연결하고, ECR 이미지를 가져와 실행
                         sshagent([SSH_CREDENTIALS_ID]) {
                             sh """
-                            ssh -o StrictHostKeyChecking=no ec2-user@백엔드인스턴스퍼블릭아이피 '
+                            ssh -o StrictHostKeyChecking=no ec2-user@172.31.6.111 '
                             aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin ${ECR_REPO}
                             docker pull ${ECR_REPO}:latest
                             docker stop node_server || true
