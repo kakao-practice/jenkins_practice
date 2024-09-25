@@ -36,7 +36,7 @@ pipeline {
         }
         stage('Deploy to EC2') {
             steps {
-                withCredentials([string(credentialsId: 'SSH_node_key', variable: 'EC2_INSTANCE_IP')]) {
+                withCredentials([string(credentialsId: 'SSH_node_key')]) {
                     script {
                         // SSH 자격 증명을 사용하여 EC2에 접속하고, Docker 명령어를 실행
                         sshagent([SSH_CREDENTIALS_ID]) {
