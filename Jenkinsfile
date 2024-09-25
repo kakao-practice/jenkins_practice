@@ -11,7 +11,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 // Git 소스 코드를 체크아웃하는 단계
-                git branch: 'main', url: "https://github.com/onikesum/moing-backend", credentialsId: 'picky-github-app'
+                git branch: 'main', url: "https://github.com/onikesum/moing-backend", credentialsId: 'jenkins_github'
             }
         }
 
