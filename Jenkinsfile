@@ -35,7 +35,7 @@ pipeline {
         }
         stage('Deploy to EC2') {
             steps {
-                withCredentials([string(credentialsId: 'SSH_node_key'),, variable: 'EC2_INSTANCE_IP')]) {
+                withCredentials([string(credentialsId: 'SSH_node_key'), variable: 'EC2_INSTANCE_IP')]) {
                     script {
                         // SSH를 통해 EC2에 연결하고, ECR 이미지를 가져와 실행
                         sshagent([SSH_CREDENTIALS_ID]) {
