@@ -19,7 +19,7 @@ pipeline {
             steps {
                 script {
                     // Docker 이미지를 빌드하는 단계
-                    dockerImage = docker.build("${ECR_REPO}:latest", "BackEnd")
+                    dockerImage = docker.build("${ECR_REPO}:latest")
                 }
             }
         }
