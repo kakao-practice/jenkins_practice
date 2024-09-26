@@ -6,7 +6,7 @@ const port = 3000;
 app.use(cors());
 
 app.get('/', (req, res) => {
-  res.send('안녕하세요 테스트 성공을 축하드립니다');
+  res.send('안녕하세요 테스트 성공을 축하드립니다~~~~~~~~');
 });
 
 app.listen(port, () => {
